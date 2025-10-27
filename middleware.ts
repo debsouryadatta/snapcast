@@ -4,11 +4,11 @@ import { auth } from "@/lib/auth";
 import aj, { createMiddleware, detectBot, shield } from "./lib/arcjet";
 
 export async function middleware(request: NextRequest) {
-  // Get the session token from cookies
-  const sessionCookie = request.cookies.get("better-auth.session_token");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  // If no session token, redirect to sign-in
-  if (!sessionCookie) {
+  if (!session) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
